@@ -3,10 +3,7 @@ const express = require('express')
 const app = express()
 
 /** Definicoes de Variaveis de Rotas */
-const routerClient = require('./routers/client')
-const routerBand = require('./routers/band')
-const routerAlbum = require('./routers/album')
-const routerImage = require('./routers/image')
+const routerQueue = require('./routers/queue')
 
 /** Tratamento de dados */
 app.use(bodyparser.urlencoded({ extended: false}))
@@ -25,10 +22,7 @@ app.use((req, res, next) => {
 })
 
 /** Rota para acesso aos dados dos autores */
-app.use('/client', routerClient)
-app.use('/band', routerBand)
-app.use('/album', routerAlbum)
-app.use('/image', routerImage)
+app.use('/queue', routerQueue)
 
 /** Validacao rotas de erro */
 app.use((req, res, next) => {
