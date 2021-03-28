@@ -1,10 +1,12 @@
 FROM node:alpine
 
+RUN apk update
+
 RUN apk add git
 
 WORKDIR /usr/app
 
-RUN git https://github.com/LAwade/RabbitMQ-API.git
+RUN git clone https://github.com/LAwade/RabbitMQ-API.git
 
 WORKDIR /usr/app/RabbitMQ-API
 
