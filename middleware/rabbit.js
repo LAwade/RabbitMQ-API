@@ -1,12 +1,6 @@
 const amqp = require('amqplib')
 
 const connect = () => {
-    console.log({protocol: process.env.RABBIT_PROTOCOL,
-        hostname: process.env.RABBIT_HOST,
-        port: process.env.RABBIT_PORT,
-        username: process.env.RABBIT_USER,
-        password: process.env.RABBIT_PASSWD,
-        vhost: process.env.RABBIT_VHOST})
     const rabbitSettings = {
         protocol: process.env.RABBIT_PROTOCOL,
         hostname: process.env.RABBIT_HOST,
