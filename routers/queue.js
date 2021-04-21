@@ -3,7 +3,9 @@ const express = require('express')
 const request = require('request')
 const util = require('util');
 const { Console } = require("console");
+const { addlist } = require("../models/list");
 const router = express.Router()
+
 const requestPromise = util.promisify(request);
 
 router.post('/send', (req, res) => {
@@ -20,7 +22,7 @@ router.post('/send', (req, res) => {
     }
 })
 
-router.post('/process', (req, res) => {
+router.post('/process', async (req, res) => {
     try {
 
         let lists = req.body.list;
@@ -48,45 +50,55 @@ router.post('/process', (req, res) => {
             for (let lst in lists) {
                 /** REALIZA A BUSCA DOS NEUTRALS LIST E DEATHS */
                 if (dataAPI.data.length == 0) {
-                    if (req.body.world && req.body.world != 'opentibia') {
-                        /** GLOBAL SERVER */
-                        let n = await getWeather("https://api.tibiadata.com/v2/world/" + req.body.world + ".json")
+                    try {
+                        if (req.body.world && req.body.world != 'opentibia' && req.body.server == 'Global') {
+                            /** GLOBAL SERVER */
+                            /** NEUTRALS */
+                            let n = await getWeather("https://api.tibiadata.com/v2/world/" + req.body.world + ".json")
+                            let d = JSON.stringify({ data: JSON.parse(n).world.players_online })
+                            let oldNeutrals = await addlist(req.body.bot, 'neutrals', d)
+                            dataAPI.data.push({ type: 'neutrals', data: d, dataOld: oldNeutrals });
 
-                        dataAPI.data.push({ type: 'neutrals', data: JSON.stringify({data: JSON.parse(n).world.players_online}) });
+                            /** DEATHS */
+                            n = await getWeather(req.body.url + '/api/tibia/deaths/' + req.body.src + '/' + req.body.server + '/' + lists[lst][0])
+                            let oldDeaths = await addlist(req.body.bot, 'deaths', n)
+                            dataAPI.data.push({ type: 'deaths', data: n, dataOld: oldDeaths });
 
-                        n = await getWeather(req.body.url + '/api/tibia/deaths/' + req.body.src + '/' + req.body.server + '/' + lists[lst][0])
-                        dataAPI.data.push({ type: 'deaths', data: n });
-
-                    } else {
-                        for (let lstAll in listAll) {
-                            let n = await getWeather(req.body.url + '/api/tibia/' + listAll[lstAll] + '/' + req.body.src + '/' + req.body.server + '/' + lists[lst][0])
-                            dataAPI.data.push({ type: listAll[lstAll], data: n });
+                        } else {
+                            /** OT SERVER */
+                            for (let lstAll in listAll) {
+                                let n = await getWeather(req.body.url + '/api/tibia/' + listAll[lstAll] + '/' + req.body.src + '/' + req.body.server + '/' + lists[lst][0])
+                                let retorno = await addlist(req.body.bot, listAll[lstAll], n)
+                                dataAPI.data.push({ type: listAll[lstAll], data: n, dataOld: retorno});
+                            }
                         }
+                    } catch (err) {
+                        console.log(err)
                     }
                 }
 
-                if (req.body.world && req.body.world != 'opentibia') {
+                /** BUSCA AS LISTAS */
+                if (req.body.world && req.body.world != 'opentibia' && req.body.server == 'Global') {
+                    /** GLOBAL SERVER */
                     for (let lt in lists[lst]) {
                         let t = await getWeather("https://api.tibiadata.com/v2/guild/" + lists[lst][lt] + ".json")
                         let members = JSON.parse(t).guild.members
                         let players = []
-
-                        members.forEach((e , v) => {
+                        members.forEach((e, v) => {
                             e.characters.forEach(element => {
                                 players.push(element)
                             })
                         });
-                        
-                        dataAPI.data.push({ guild: lists[lst][lt], type: lst, data: JSON.stringify({data: players}) });
+                        dataAPI.data.push({ guild: lists[lst][lt], type: lst, data: JSON.stringify({ data: players }) });
                     }
                 } else {
+                    /** OT SERVER */
                     for (let lt in lists[lst]) {
                         let t = await getWeather(req.body.url + '/api/tibia/friends/' + req.body.src + '/' + req.body.server + '/' + lists[lst][lt])
                         dataAPI.data.push({ guild: lists[lst][lt], type: lst, data: t });
                     }
                 }
             }
-            console.log(dataAPI)
             queue.sendToQueue(req.body.queue, dataAPI)
         }
         done()
