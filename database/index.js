@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-mongoose.connect('mongodb://awade:Hunt3r195@localhost:27017/tibiabot?authSource=admin', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect("mongodb://" + process.env.MONGODB_USER + ":" + process.env.MONGODB_PASSWD + "@" + process.env.MONGODB_HOST + ":" + process.env.MONGODB_PORT + "/" + process.env.MONGODB_CLUSTER + "?authSource=" + process.env.MONGODB_AUTHSOURCE, { useNewUrlParser: true, useUnifiedTopology: true })
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
