@@ -24,10 +24,17 @@ const addlist = async function (bot, type, data) {
         } else {
             await list.updateOne({ bot: bot, name: type }, { data: data })
         }
-        return ret.data
     } catch (err) {
         console.log(err)
     }
 }
 
-module.exports = { list, addlist }
+const deleteDocuments = async function () {
+    try {
+        await list.deleteMany({})
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+module.exports = { list, addlist, deleteDocuments }

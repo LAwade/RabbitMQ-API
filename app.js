@@ -4,6 +4,7 @@ const app = express()
 
 /** Definicoes de Variaveis de Rotas */
 const routerQueue = require('./routers/queue')
+const routerList = require('./routers/list')
 
 /** Tratamento de dados */
 app.use(bodyparser.urlencoded({ extended: false}))
@@ -21,8 +22,9 @@ app.use((req, res, next) => {
     next()
 })
 
-/** Rota para acesso aos dados dos autores */
+/** Rota para acesso os metodos */
 app.use('/queue', routerQueue)
+app.use('/list', routerList)
 
 /** Validacao rotas de erro */
 app.use((req, res, next) => {
