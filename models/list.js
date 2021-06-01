@@ -24,8 +24,9 @@ const addlist = async function (bot, type, data) {
                 }
             )
         } else {
-            await list.updateOne({ bot: bot, name: type }, { data: data })
+            await list.updateOne({ bot: bot, name: type }, { data: data, date: new Date() })
         }
+        return ret.data
     } catch (err) {
         console.log(err)
     }
