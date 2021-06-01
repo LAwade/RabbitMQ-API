@@ -5,6 +5,7 @@ const Schema = mongoose.Schema;
 const List = new Schema({
     bot: String,
     name: String,
+    date: String,
     data: String
 });
 
@@ -18,6 +19,7 @@ const addlist = async function (bot, type, data) {
                 {
                     bot: bot,
                     name: type,
+                    date: new Date(),
                     data: data
                 }
             )
