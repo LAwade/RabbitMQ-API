@@ -1,6 +1,6 @@
-const http = require('http')
-const app = require('./app')
-const port = 3005
-const server = http.createServer(app)
+const http = require("http");
+const app = require("./app");
+const port = 3004;
+const server = http.createServer(app);
 
-server.listen(port)
+server.listen(port);
