@@ -25,13 +25,21 @@ const sendRequest = async (queue) => {
           })
           .then((message) => {
             channel.ack(msg);
+          })
+          .catch((error) => {
+            console.log(error);
+            if (error.response.status == 404) {
+              console.log("API NOT FOUND OR UNAVAILABLE");
+            }
           });
       }),
         {
           noAck: true,
         };
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 sendRequest(queue);
