@@ -12,13 +12,15 @@ RUN git clone https://lawade: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@github.com
 
 WORKDIR /usr/app/RabbitMQ-API
 
-RUN cp -Rap .env_example .env
+RUN mv .env_example .env
 
 RUN npm install
 
 EXPOSE 3004
 
-COPY docker-entrypoint.sh /
+COPY docker-entrypoint.sh ./
+
+RUN chmod 755 docker-entrypoint.sh
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 
