@@ -28,7 +28,7 @@ const sendRequest = async (queue) => {
           })
           .catch((error) => {
             console.log(error);
-            if (error.response.status == 404) {
+            if (error.response?.status == 404) {
               console.log("API NOT FOUND OR UNAVAILABLE");
             }
           });
