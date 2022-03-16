@@ -4,16 +4,15 @@ require("dotenv").config();
 
 let queue = "tibiabot";
 
-const server = process.argv[2] + "/api/v2/list/";
+const server = "http://" + process.argv[2] + "/api/v2/list/";
 
 const sendRequest = async (queue) => {
   await rabbitmq
     .connect()
-    .then((channel) => rabbitmq.createQueue(channel, queue))
-    .then((channel) => {
-      channel.prefetch(1);
-      channel.consume(queue, async (msg) => {
-        console.log(" [x] Received %s", msg.content.toString());
+    .then(async (channel) => await rabbitmq.createQueue(channel, queue))
+    .then(async (channel) => {
+      await channel.prefetch(1);
+      await channel.consume(queue, async (msg) => {
         let info = JSON.parse(msg.content.toString());
         await axios
           .post(`${server}${info.data.list}`, {

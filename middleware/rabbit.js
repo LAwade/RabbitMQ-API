@@ -39,21 +39,9 @@ const consume = async (queue, callback) => {
     .then((channel) => createQueue(channel, queue))
     .then((channel) => {
       channel.prefetch(1);
-      channel.consume(
-        queue,
-        function (msg) {
-          var secs = msg.content.toString().split(".").length - 1;
-
-          console.log(" [x] Received %s", msg.content.toString());
-          setTimeout(function () {
-            console.log(" [x] Done");
-            //channel.ack(msg);
-          }, secs * 1000);
-        },
-        {
-          noAck: true,
-        }
-      );
+      channel.consume(queue, {
+        noAck: true,
+      });
     })
     .catch((err) => console.log(err));
 };
