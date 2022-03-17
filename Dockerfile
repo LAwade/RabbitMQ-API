@@ -16,10 +16,8 @@ RUN npm install
 
 EXPOSE 3004
 
-COPY worker.sh ./
+COPY docker-entrypoint.sh ./
 
-RUN chmod 755 worker.sh
+RUN chmod 755 docker-entrypoint.sh
 
-ENTRYPOINT [ "npm", "run", "worker" ]
-
-CMD ["npm", "start"]
+CMD ["/bin/sh", "docker-entrypoint.sh"]
