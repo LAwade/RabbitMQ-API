@@ -8,7 +8,7 @@ WORKDIR /usr/app
 
 RUN git clone -b worker https://lawade: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@github.com/LAwade/RabbitMQ-API.git
 
-WORKDIR /usr/app/RabbitMQWorker
+WORKDIR /usr/app/RabbitMQ-API
 
 RUN mv .env_example .env
 
