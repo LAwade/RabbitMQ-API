@@ -1,8 +1,5 @@
 FROM node:alpine
 
-ARG PARAM
-ARG COMMAND
-
 RUN apk update
 RUN apk add git
 WORKDIR /usr/app
@@ -13,6 +10,9 @@ RUN mv .env_example .env
 RUN npm install
 EXPOSE 3004
 
-ENTRYPOINT [ ${COMMAND} ]
+ENTRYPOINT [ "node" ]
 
-CMD [ ${PARAM} ]
+CMD [ "scripts/worker.js" ]
+
+#docker image build -t rabbitworker --no-cache .
+#docker run -d --name rabbitworker -e RABBIT_HOST='165.22.3.4' -e RABBIT_PASSWD='guest' -e SERVER_API='http://144.22.138.135:3003' rabbitworker
