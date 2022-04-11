@@ -2,10 +2,11 @@
 
 const amqp = require("amqplib/callback_api");
 const axios = require("axios");
+require("dotenv").config();
 
-const queue = process.env.QUEUE;
-const host = process.env.HOST;
-const server = process.env.QUEUE;
+const queue = process.env.RABBIT_QUEUE;
+const host = process.env.RABBIT_HOST;
+const server = process.env.SERVER_API;
 
 amqp.connect("amqp://" + host, function (error, connection) {
   connection
@@ -45,7 +46,4 @@ amqp.connect("amqp://" + host, function (error, connection) {
         }
       );
     })
-    .catch((e) => {
-      console.log("CONNECTION FAIL");
-    });
 });
