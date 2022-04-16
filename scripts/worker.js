@@ -4,11 +4,16 @@ const amqp = require("amqplib/callback_api");
 const axios = require("axios");
 require("dotenv").config();
 
-const queue = process.env.RABBIT_QUEUE;
-const host = process.env.RABBIT_HOST;
+const queue = process.env.RABBIT_QUEUE
 const server = process.env.SERVER_API;
 
-amqp.connect("amqp://" + host, function (error, connection) {
+const options = {
+  hostname: process.env.RABBIT_HOST,
+  username: process.env.RABBIT_USERNAME,
+  password: process.env.RABBIT_PASSWD
+}
+
+amqp.connect(options, function (error, connection) {
   connection
     .createChannel(function (error, channel) {
       channel.assertQueue(queue, {
