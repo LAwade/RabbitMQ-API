@@ -5,15 +5,13 @@ const axios = require("axios");
 require("dotenv").config();
 
 const queue = process.env.RABBIT_QUEUE
-const server = process.env.SERVER_API;
+const server = `http://${process.env.SERVER_API}/api/v2/list/`;
 
 const options = {
   hostname: process.env.RABBIT_HOST,
   username: process.env.RABBIT_USERNAME,
   password: process.env.RABBIT_PASSWD
 }
-
-console.log({queue, server, options})
 
 amqp.connect(options, function (error, connection) {
   connection
@@ -31,7 +29,7 @@ amqp.connect(options, function (error, connection) {
         async (msg) => {
           let info = JSON.parse(msg.content.toString());
           await axios
-            .post(`${server}/${info.data.list}`, {
+            .post(`${server}${info.data.list}`, {
               world: info.data.world,
               src: info.data.src,
               server: info.data.server,
