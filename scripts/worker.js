@@ -13,6 +13,8 @@ const options = {
   password: process.env.RABBIT_PASSWD
 }
 
+console.log({queue, server, options})
+
 amqp.connect(options, function (error, connection) {
   connection
     .createChannel(function (error, channel) {
@@ -29,7 +31,7 @@ amqp.connect(options, function (error, connection) {
         async (msg) => {
           let info = JSON.parse(msg.content.toString());
           await axios
-            .post(`${server}${info.data.list}`, {
+            .post(`${server}/${info.data.list}`, {
               world: info.data.world,
               src: info.data.src,
               server: info.data.server,
@@ -51,4 +53,4 @@ amqp.connect(options, function (error, connection) {
         }
       );
     })
-});
+})
