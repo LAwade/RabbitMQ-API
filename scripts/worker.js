@@ -5,7 +5,7 @@ const axios = require("axios");
 require("dotenv").config();
 
 const queue = process.env.RABBIT_QUEUE
-const server = `http://${process.env.SERVER_API}/api/v2/list/`;
+const server = `${process.env.SERVER_API}/api/v2/list/`;
 
 const options = {
   hostname: process.env.RABBIT_HOST,
